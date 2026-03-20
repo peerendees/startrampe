@@ -1,19 +1,1390 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BERENT | Neues Projekt</title>
-    <link href="output.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Startrampe | BERENT.AI</title>
+  <link rel="icon" type="image/webp" href="assets/images/BE_Farbe_V3.webp">
+  <style>
+    /* ── Fonts (lokal gehostet, DSGVO-konform) ── */
+    @font-face {
+      font-family: 'Bebas Neue';
+      src: url('assets/fonts/bebas-neue-regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Lora';
+      src: url('assets/fonts/lora-300.woff2') format('woff2');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Lora';
+      src: url('assets/fonts/lora-400.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Lora';
+      src: url('assets/fonts/lora-600.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      src: url('assets/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ── CSS Custom Properties ── */
+    :root {
+      --bg: #090806;
+      --card: #110e0a;
+      --card-hover: #161209;
+      --border: #2a2118;
+      --copper: #B5742A;
+      --copper-light: #c98a3f;
+      --gold: #E8C98A;
+      --text: #C4BCB1;
+      --muted: #7A6A58;
+      --code-bg: #0a0908;
+      --warning: #8B3A3A;
+      --success: #3a8b4a;
+      --font-headline: 'Bebas Neue', 'Arial Black', sans-serif;
+      --font-body: 'Lora', 'Georgia', serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --max-width: 960px;
+      --radius: 6px;
+    }
+
+    /* ── Reset und Basis ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+    }
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .header-logo {
+      height: 32px;
+      width: auto;
+    }
+    .header-plus {
+      color: var(--gold);
+      font-family: var(--font-headline);
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Main ── */
+    .main-content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 3rem 0 2rem;
+    }
+    .hero-title {
+      font-family: var(--font-headline);
+      font-size: 3.5rem;
+      color: var(--copper);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: 1.2rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ── Step Progress Bar ── */
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 2rem 0 3rem;
+      padding: 0;
+      list-style: none;
+      overflow-x: auto;
+    }
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      flex: 1;
+      max-width: 140px;
+    }
+    .progress-step::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: calc(50% + 18px);
+      width: calc(100% - 36px);
+      height: 2px;
+      background: var(--border);
+    }
+    .progress-step:last-child::after { display: none; }
+    .progress-step.active::after,
+    .progress-step.done::after {
+      background: var(--copper);
+    }
+    .step-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+    .progress-step.active .step-dot {
+      border-color: var(--copper);
+      background: var(--copper);
+      color: var(--bg);
+    }
+    .progress-step.done .step-dot {
+      border-color: var(--copper);
+      background: transparent;
+      color: var(--copper);
+    }
+    .step-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .progress-step.active .step-label {
+      color: var(--copper);
+    }
+    .progress-step.done .step-label {
+      color: var(--copper);
+      opacity: 0.7;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-title {
+      font-family: var(--font-headline);
+      font-size: 1.8rem;
+      color: var(--copper);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+    }
+    .card-step-number {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+    }
+
+    /* ── Formulare ── */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+    .form-label .required {
+      color: var(--copper);
+    }
+    .form-hint {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 300;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--copper);
+    }
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A6A58' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* Abgeleitete Felder */
+    .derived-group {
+      position: relative;
+    }
+    .derived-badge {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-left: 0.5rem;
+      opacity: 0.8;
+    }
+    .derived-badge.hidden { display: none; }
+    .subdomain-preview {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--copper);
+      margin-top: 0.35rem;
+    }
+
+    /* Experience Toggle */
+    .toggle-group {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      width: fit-content;
+    }
+    .toggle-option {
+      padding: 0.5rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      background: var(--code-bg);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .toggle-option.active {
+      background: var(--copper);
+      color: var(--bg);
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: var(--copper);
+      color: var(--bg);
+      font-family: var(--font-headline);
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-primary:hover { background: var(--copper-light); }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ── Code-Blöcke ── */
+    .code-block-wrapper {
+      position: relative;
+      margin: 1rem 0;
+    }
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      padding-right: 3.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.3rem 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      border-color: var(--copper);
+      color: var(--copper);
+    }
+    .copy-btn.copied {
+      border-color: var(--copper);
+      color: var(--copper);
+      background: rgba(181, 116, 42, 0.1);
+    }
+
+    /* ── Hinweis- und Warnbox ── */
+    .hint-box {
+      border-left: 3px solid var(--copper);
+      background: var(--card);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+    .hint-box .hint-icon {
+      color: var(--gold);
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+    .hint-box p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .hint-box.beginner-only { display: none; }
+    body.level-einsteiger .hint-box.beginner-only { display: flex; }
+
+    .warn-box {
+      border-left: 3px solid var(--warning);
+      background: var(--card);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+    .warn-box .warn-icon {
+      color: var(--warning);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .warn-box p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ── Anleitungstext ── */
+    .guide-text {
+      margin: 0.75rem 0;
+      font-size: 0.95rem;
+    }
+    .guide-text a {
+      color: var(--copper);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .guide-text a:hover {
+      color: var(--copper-light);
+    }
+    .guide-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .guide-text ol,
+    .guide-text ul {
+      margin: 0.5rem 0 0.5rem 1.5rem;
+    }
+    .guide-text li {
+      margin-bottom: 0.35rem;
+    }
+
+    /* Inline-Code */
+    .guide-text code,
+    .inline-code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.15em 0.4em;
+      color: var(--copper-light);
+    }
+
+    /* ── DNS-Tabelle ── */
+    .dns-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .dns-table th,
+    .dns-table td {
+      border: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      text-align: left;
+    }
+    .dns-table th {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      background: var(--code-bg);
+    }
+    .dns-table td {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    /* ── Troubleshooting ── */
+    .troubleshoot-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 0;
+      border: none;
+      background: none;
+      transition: color 0.2s;
+    }
+    .troubleshoot-toggle:hover { color: var(--copper); }
+    .troubleshoot-toggle .arrow {
+      transition: transform 0.2s;
+      font-size: 0.6rem;
+    }
+    .troubleshoot-toggle.open .arrow {
+      transform: rotate(90deg);
+    }
+    .troubleshoot-content {
+      display: none;
+      overflow-x: auto;
+    }
+    .troubleshoot-content.open { display: block; }
+    .troubleshoot-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    .troubleshoot-table th,
+    .troubleshoot-table td {
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .troubleshoot-table th {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      background: var(--code-bg);
+      white-space: nowrap;
+    }
+
+    /* ── Ergebnis-Card ── */
+    .result-card {
+      background: var(--card);
+      border: 2px solid var(--copper);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin: 1.5rem 0;
+    }
+    .result-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+    .result-item .result-label {
+      color: var(--muted);
+      white-space: nowrap;
+      min-width: 130px;
+    }
+    .result-item a {
+      color: var(--copper);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .result-item a:hover { text-decoration: underline; }
+
+    /* ── Sections ── */
+    .guide-section { display: none; }
+    .guide-section.visible { display: block; }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      margin-top: 3rem;
+    }
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer-logo { height: 24px; width: auto; }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-links a {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--copper); }
+
+    /* ── Section headings within guide ── */
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-heading .plus {
+      color: var(--gold);
+      font-family: var(--font-headline);
+      font-size: 1.2rem;
+    }
+    .section-heading h2 {
+      font-family: var(--font-headline);
+      font-size: 1.4rem;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Validation ── */
+    .form-input.error,
+    .form-textarea.error,
+    .form-select.error {
+      border-color: var(--warning);
+    }
+    .error-msg {
+      font-size: 0.8rem;
+      color: var(--warning);
+      margin-top: 0.25rem;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+
+    /* ── Next Steps Box ── */
+    .next-steps {
+      margin: 1.5rem 0;
+    }
+    .next-steps li {
+      margin-bottom: 0.35rem;
+      font-size: 0.95rem;
+    }
+    .next-steps li::marker {
+      color: var(--copper);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .main-content { padding: 1.5rem 1rem 3rem; }
+      .card { padding: 1.5rem; }
+      .hero-title { font-size: 2.8rem; }
+    }
+    @media (max-width: 640px) {
+      .hero-title { font-size: 2.2rem; }
+      .hero-tagline { font-size: 1rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .step-label { display: none; }
+      .progress-step { max-width: 48px; }
+      .card { padding: 1.25rem; }
+      .card-title { font-size: 1.5rem; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .result-item { flex-direction: column; gap: 0.25rem; }
+      .result-item .result-label { min-width: auto; }
+      .dns-table, .troubleshoot-table { font-size: 0.75rem; }
+      .dns-table th, .dns-table td,
+      .troubleshoot-table th, .troubleshoot-table td { padding: 0.4rem 0.5rem; }
+    }
+
+    /* ── Animations ── */
+    .fade-in {
+      animation: fadeIn 0.4s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
-    <main class="max-w-4xl mx-auto px-4 py-16">
-        <h1 class="text-4xl font-bold text-berent-primary mb-4">
-            BERENT Website Template
-        </h1>
-        <p class="text-gray-600">
-            Starte hier – die Cursor Rules sind bereits eingebunden.
-        </p>
-    </main>
+<body class="level-einsteiger">
+
+  <!-- ── Header ── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="https://berent.ai" class="header-brand">
+        <img src="assets/images/logo_farbe_v3.webp" alt="BERENT.AI" class="header-logo">
+        <span class="header-plus">+</span>
+      </a>
+      <span class="header-label">Guides</span>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+      <h1 class="hero-title">Startrampe</h1>
+      <p class="hero-tagline">Dein Projekt. Von lokal bis live.</p>
+    </section>
+
+    <!-- ── Step Progress Bar ── -->
+    <nav>
+      <ol class="progress-bar" id="progressBar">
+        <li class="progress-step active" data-step="1">
+          <span class="step-dot">1</span>
+          <span class="step-label">Eingabe</span>
+        </li>
+        <li class="progress-step" data-step="2">
+          <span class="step-dot">2</span>
+          <span class="step-label">Projekt</span>
+        </li>
+        <li class="progress-step" data-step="3">
+          <span class="step-dot">3</span>
+          <span class="step-label">GitHub</span>
+        </li>
+        <li class="progress-step" data-step="4">
+          <span class="step-dot">4</span>
+          <span class="step-label">Vercel</span>
+        </li>
+        <li class="progress-step" data-step="5">
+          <span class="step-dot">5</span>
+          <span class="step-label">DNS</span>
+        </li>
+        <li class="progress-step" data-step="6">
+          <span class="step-dot">6</span>
+          <span class="step-label">Live</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- ── Schritt 1: Eingabeformular ──────── -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="step1" class="guide-section visible">
+      <div class="card fade-in">
+        <div class="card-step-number">Schritt 1 von 6</div>
+        <h2 class="card-title">Eingaben</h2>
+        <p class="guide-text" style="margin-bottom:1.5rem;">Fülle die Felder aus — daraus wird deine persönliche Deployment-Anleitung generiert.</p>
+
+        <form id="inputForm" novalidate>
+
+          <!-- Projektbeschreibung -->
+          <div class="form-group">
+            <label class="form-label" for="beschreibung">Beschreib dein Projekt in 1–2 Sätzen <span class="required">*</span></label>
+            <textarea class="form-textarea" id="beschreibung" placeholder="z.B. Ein Kalorien-Rechner für meine Ernährungsberatungspraxis" rows="3"></textarea>
+            <div class="error-msg" id="errBeschreibung">Bitte mindestens 10 Zeichen eingeben.</div>
+          </div>
+
+          <!-- GitHub-Benutzername -->
+          <div class="form-group">
+            <label class="form-label" for="githubUser">Dein GitHub-Benutzername <span class="required">*</span></label>
+            <input type="text" class="form-input" id="githubUser" placeholder="z.B. maxmustermann" autocomplete="off" spellcheck="false">
+            <div class="error-msg" id="errGithub">Nur Buchstaben, Zahlen und Bindestriche erlaubt.</div>
+          </div>
+
+          <!-- OS und IDE -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="os">Betriebssystem <span class="required">*</span></label>
+              <select class="form-select" id="os">
+                <option value="">Bitte wählen</option>
+                <option value="macos">macOS</option>
+                <option value="windows">Windows</option>
+                <option value="linux">Linux</option>
+              </select>
+              <div class="error-msg" id="errOs">Bitte wähle dein Betriebssystem.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ide">Entwicklungsumgebung <span class="required">*</span></label>
+              <select class="form-select" id="ide">
+                <option value="">Bitte wählen</option>
+                <option value="claude-code">Claude Code</option>
+                <option value="cursor">Cursor</option>
+                <option value="vscode">VS Code</option>
+                <option value="terminal">Terminal</option>
+              </select>
+              <div class="error-msg" id="errIde">Bitte wähle deine Entwicklungsumgebung.</div>
+            </div>
+          </div>
+
+          <!-- Abgeleitete Felder -->
+          <div class="section-heading" style="margin-top:1rem;">
+            <span class="plus">+</span>
+            <h2>Projektdetails</h2>
+          </div>
+
+          <div class="form-group derived-group">
+            <label class="form-label" for="projektName">
+              Projektname / Repo-Name
+              <span class="derived-badge" id="badgeProjektName">automatisch</span>
+            </label>
+            <input type="text" class="form-input" id="projektName" placeholder="wird automatisch abgeleitet" spellcheck="false">
+            <div class="form-hint">Wird als Repo-Name, Vercel-Projektname und Ordnername verwendet.</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group derived-group">
+              <label class="form-label" for="subdomain">
+                Subdomain
+                <span class="derived-badge" id="badgeSubdomain">automatisch</span>
+              </label>
+              <input type="text" class="form-input" id="subdomain" placeholder="wird automatisch abgeleitet" spellcheck="false">
+              <div class="subdomain-preview" id="subdomainPreview"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="domain">Hauptdomain</label>
+              <input type="text" class="form-input" id="domain" value="berent.ai" spellcheck="false">
+              <div class="form-hint">Wenn du keine eigene Domain hast, nutze berent.ai als Subdomain.</div>
+            </div>
+          </div>
+
+          <!-- Erfahrungslevel -->
+          <div class="form-group">
+            <label class="form-label">Erfahrungslevel</label>
+            <div class="toggle-group">
+              <button type="button" class="toggle-option active" data-level="einsteiger">Einsteiger</button>
+              <button type="button" class="toggle-option" data-level="fortgeschritten">Fortgeschritten</button>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-primary" id="submitBtn">
+            Startrampe zünden
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- ── Schritt 2: Projekt lokal anlegen ── -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="step2" class="guide-section">
+      <div class="card fade-in">
+        <div class="card-step-number">Schritt 2 von 6</div>
+        <h2 class="card-title">Projekt lokal anlegen</h2>
+        <div id="step2Content"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- ── Schritt 3: Git und GitHub ───────── -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="step3" class="guide-section">
+      <div class="card fade-in">
+        <div class="card-step-number">Schritt 3 von 6</div>
+        <h2 class="card-title">Projekt in GitHub sichern</h2>
+        <div id="step3Content"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- ── Schritt 4: Vercel ───────────────── -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="step4" class="guide-section">
+      <div class="card fade-in">
+        <div class="card-step-number">Schritt 4 von 6</div>
+        <h2 class="card-title">Projekt auf Vercel deployen</h2>
+        <div id="step4Content"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- ── Schritt 5: Cloudflare DNS ───────── -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="step5" class="guide-section">
+      <div class="card fade-in">
+        <div class="card-step-number">Schritt 5 von 6</div>
+        <h2 class="card-title">Custom Domain einrichten</h2>
+        <div id="step5Content"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- ── Schritt 6: Live ─────────────────── -->
+    <!-- ══════════════════════════════════════ -->
+    <section id="step6" class="guide-section">
+      <div class="card fade-in">
+        <div class="card-step-number">Schritt 6 von 6</div>
+        <h2 class="card-title">Deine Seite ist live!</h2>
+        <div id="step6Content"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/images/logo_farbe_v3.webp" alt="BERENT.AI" class="footer-logo">
+        <span class="header-plus" style="font-size:1rem;">+</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://berent.ai/impressum.html">Impressum</a>
+        <a href="https://berent.ai">berent.ai</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- ── JavaScript ────────────────────── -->
+  <!-- ══════════════════════════════════════ -->
+  <script>
+    /* ── State ── */
+    var currentStep = 1;
+    var formData = {};
+    var manualOverride = { projektName: false, subdomain: false };
+
+    /* ── Namensableitung ── */
+    function deriveProjectName(beschreibung) {
+      var stopwords = ['ein', 'eine', 'einer', 'der', 'die', 'das', 'fuer', 'fur',
+        'und', 'oder', 'mit', 'von', 'zu', 'im', 'am', 'an', 'auf', 'in',
+        'mein', 'meine', 'meiner', 'meinem', 'meinen', 'ich', 'wir', 'unser',
+        'unsere', 'ist', 'sind', 'wird', 'soll', 'kann', 'hat', 'haben'];
+
+      return beschreibung
+        .toLowerCase()
+        .replace(/ä/g, 'ae').replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+        .split(/\s+/)
+        .filter(function(w) { return !stopwords.includes(w); })
+        .slice(0, 4)
+        .join('-')
+        .replace(/[^a-z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 30)
+        .replace(/-$/g, '');
+    }
+
+    /* ── Live-Ableitung ── */
+    var beschreibungEl = document.getElementById('beschreibung');
+    var projektNameEl = document.getElementById('projektName');
+    var subdomainEl = document.getElementById('subdomain');
+    var domainEl = document.getElementById('domain');
+    var subdomainPreview = document.getElementById('subdomainPreview');
+
+    beschreibungEl.addEventListener('input', function() {
+      var derived = deriveProjectName(this.value);
+      if (!manualOverride.projektName) {
+        projektNameEl.value = derived;
+        document.getElementById('badgeProjektName').classList.remove('hidden');
+      }
+      if (!manualOverride.subdomain) {
+        subdomainEl.value = derived;
+        document.getElementById('badgeSubdomain').classList.remove('hidden');
+      }
+      updateSubdomainPreview();
+    });
+
+    projektNameEl.addEventListener('input', function() {
+      manualOverride.projektName = true;
+      document.getElementById('badgeProjektName').classList.add('hidden');
+      if (!manualOverride.subdomain) {
+        subdomainEl.value = this.value;
+      }
+      updateSubdomainPreview();
+    });
+
+    subdomainEl.addEventListener('input', function() {
+      manualOverride.subdomain = true;
+      document.getElementById('badgeSubdomain').classList.add('hidden');
+      updateSubdomainPreview();
+    });
+
+    domainEl.addEventListener('input', updateSubdomainPreview);
+
+    function updateSubdomainPreview() {
+      var sub = subdomainEl.value;
+      var dom = domainEl.value;
+      subdomainPreview.textContent = sub && dom ? sub + '.' + dom : '';
+    }
+
+    /* ── Erfahrungslevel Toggle ── */
+    var toggleBtns = document.querySelectorAll('.toggle-option');
+    toggleBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        toggleBtns.forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        var level = this.getAttribute('data-level');
+        document.body.className = 'level-' + level;
+      });
+    });
+
+    /* ── Validierung ── */
+    function validateForm() {
+      var valid = true;
+
+      var b = beschreibungEl.value.trim();
+      if (b.length < 10) {
+        beschreibungEl.classList.add('error');
+        document.getElementById('errBeschreibung').classList.add('visible');
+        valid = false;
+      } else {
+        beschreibungEl.classList.remove('error');
+        document.getElementById('errBeschreibung').classList.remove('visible');
+      }
+
+      var gh = document.getElementById('githubUser').value.trim();
+      if (!gh || !/^[a-zA-Z0-9-]+$/.test(gh)) {
+        document.getElementById('githubUser').classList.add('error');
+        document.getElementById('errGithub').classList.add('visible');
+        valid = false;
+      } else {
+        document.getElementById('githubUser').classList.remove('error');
+        document.getElementById('errGithub').classList.remove('visible');
+      }
+
+      var os = document.getElementById('os').value;
+      if (!os) {
+        document.getElementById('os').classList.add('error');
+        document.getElementById('errOs').classList.add('visible');
+        valid = false;
+      } else {
+        document.getElementById('os').classList.remove('error');
+        document.getElementById('errOs').classList.remove('visible');
+      }
+
+      var ide = document.getElementById('ide').value;
+      if (!ide) {
+        document.getElementById('ide').classList.add('error');
+        document.getElementById('errIde').classList.add('visible');
+        valid = false;
+      } else {
+        document.getElementById('ide').classList.remove('error');
+        document.getElementById('errIde').classList.remove('visible');
+      }
+
+      return valid;
+    }
+
+    /* ── Formular-Submit ── */
+    document.getElementById('inputForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!validateForm()) return;
+
+      formData = {
+        beschreibung: beschreibungEl.value.trim(),
+        githubUser: document.getElementById('githubUser').value.trim(),
+        os: document.getElementById('os').value,
+        ide: document.getElementById('ide').value,
+        projektName: projektNameEl.value.trim() || deriveProjectName(beschreibungEl.value),
+        subdomain: subdomainEl.value.trim() || projektNameEl.value.trim(),
+        domain: domainEl.value.trim() || 'berent.ai'
+      };
+
+      generateGuide();
+      goToStep(2);
+    });
+
+    /* ── Step Navigation ── */
+    function goToStep(step) {
+      currentStep = step;
+
+      // Progress Bar aktualisieren
+      var steps = document.querySelectorAll('.progress-step');
+      steps.forEach(function(s) {
+        var n = parseInt(s.getAttribute('data-step'));
+        s.classList.remove('active', 'done');
+        if (n === currentStep) s.classList.add('active');
+        else if (n < currentStep) s.classList.add('done');
+      });
+
+      // Done-Häkchen
+      steps.forEach(function(s) {
+        var n = parseInt(s.getAttribute('data-step'));
+        var dot = s.querySelector('.step-dot');
+        if (n < currentStep) {
+          dot.textContent = '✓';
+        } else {
+          dot.textContent = n;
+        }
+      });
+
+      // Sections anzeigen
+      for (var i = 1; i <= 6; i++) {
+        var section = document.getElementById('step' + i);
+        if (i <= currentStep) {
+          section.classList.add('visible');
+        } else {
+          section.classList.remove('visible');
+        }
+      }
+
+      // Zum aktuellen Schritt scrollen
+      var target = document.getElementById('step' + step);
+      if (target) {
+        setTimeout(function() {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+
+    /* ── Code-Block erzeugen ── */
+    function codeBlock(code) {
+      var id = 'cb_' + Math.random().toString(36).slice(2, 8);
+      return '<div class="code-block-wrapper">' +
+        '<pre class="code-block" id="' + id + '">' + escapeHtml(code.trim()) + '</pre>' +
+        '<button class="copy-btn" onclick="copyCode(\'' + id + '\', this)">Kopieren</button>' +
+        '</div>';
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    /* ── Copy-Funktion ── */
+    function copyCode(id, btn) {
+      var el = document.getElementById(id);
+      var text = el.textContent;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() {
+          showCopied(btn);
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showCopied(btn);
+      }
+    }
+
+    function showCopied(btn) {
+      btn.textContent = 'Kopiert!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'Kopieren';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+
+    /* ── Weiter-Button ── */
+    function nextStepBtn(step) {
+      return '<div style="margin-top:2rem;text-align:right;">' +
+        '<button class="btn-primary" style="width:auto;padding:0.65rem 1.75rem;font-size:1.1rem;" onclick="goToStep(' + step + ')">' +
+        'Weiter zu Schritt ' + step +
+        '</button></div>';
+    }
+
+    /* ── Guide generieren ── */
+    function generateGuide() {
+      var d = formData;
+      var isWin = d.os === 'windows';
+      var pathSep = isWin ? '\\' : '/';
+      var basePath = isWin
+        ? 'C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName
+        : '~/Projekte/' + d.projektName;
+      var shellLabel = isWin ? 'PowerShell' : 'Terminal';
+
+      /* ── Schritt 2: Projekt lokal anlegen ── */
+      var s2 = '';
+      s2 += '<p class="guide-text">Erstelle einen neuen Projektordner und lege deine erste Datei an.</p>';
+
+      if (d.ide === 'claude-code') {
+        if (isWin) {
+          s2 += codeBlock('mkdir C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName + '\ncd C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName + '\nclaude');
+        } else {
+          s2 += codeBlock('mkdir ~/Projekte/' + d.projektName + '\ncd ~/Projekte/' + d.projektName + '\nclaude');
+        }
+        s2 += '<p class="guide-text">Gib in Claude Code ein:</p>';
+        s2 += '<div class="hint-box"><span class="hint-icon">+</span><p>Erstelle eine einfache index.html mit dem Titel "' + escapeHtml(d.projektName) + '" und einer Überschrift, die das Projekt beschreibt.</p></div>';
+      } else if (d.ide === 'cursor') {
+        if (isWin) {
+          s2 += codeBlock('mkdir C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName + '\ncursor C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName);
+        } else {
+          s2 += codeBlock('mkdir ~/Projekte/' + d.projektName + '\ncursor ~/Projekte/' + d.projektName);
+        }
+        s2 += '<p class="guide-text">In Cursor: Neue Datei anlegen → <code>index.html</code> → HTML5-Grundgerüst einfügen.</p>';
+      } else if (d.ide === 'vscode') {
+        if (isWin) {
+          s2 += codeBlock('mkdir C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName + '\ncd C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName + '\ncode .');
+        } else {
+          s2 += codeBlock('mkdir ~/Projekte/' + d.projektName + '\ncd ~/Projekte/' + d.projektName + '\ncode .');
+        }
+        s2 += '<p class="guide-text">In VS Code: Neue Datei → <code>index.html</code> → Tippe <code>!</code> + Tab für das Emmet-Grundgerüst.</p>';
+      } else {
+        if (isWin) {
+          s2 += codeBlock('mkdir C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName + '\ncd C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName);
+          s2 += '<p class="guide-text">Erstelle die Datei <code>index.html</code> mit folgendem Inhalt:</p>';
+          s2 += codeBlock('@"\n<!DOCTYPE html>\n<html lang="de">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>' + escapeHtml(d.projektName) + '</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }\n    h1 { color: #333; }\n  </style>\n</head>\n<body>\n  <h1>' + escapeHtml(d.projektName) + '</h1>\n  <p>Willkommen! Diese Seite wird bald unter <strong>' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</strong> erreichbar sein.</p>\n</body>\n</html>\n"@ | Out-File -Encoding utf8 index.html');
+        } else {
+          s2 += codeBlock('mkdir ~/Projekte/' + d.projektName + '\ncd ~/Projekte/' + d.projektName);
+          s2 += '<p class="guide-text">Erstelle die Datei <code>index.html</code> mit folgendem Inhalt:</p>';
+          s2 += codeBlock("cat > index.html << 'EOF'\n<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>" + escapeHtml(d.projektName) + "</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }\n    h1 { color: #333; }\n  </style>\n</head>\n<body>\n  <h1>" + escapeHtml(d.projektName) + "</h1>\n  <p>Willkommen! Diese Seite wird bald unter <strong>" + escapeHtml(d.subdomain) + "." + escapeHtml(d.domain) + "</strong> erreichbar sein.</p>\n</body>\n</html>\nEOF");
+        }
+      }
+
+      // Beispiel-HTML für Cursor/VS Code
+      if (d.ide === 'cursor' || d.ide === 'vscode') {
+        s2 += '<p class="guide-text">Falls du ein Grundgerüst brauchst, hier eine einfache Vorlage:</p>';
+        s2 += codeBlock('<!DOCTYPE html>\n<html lang="de">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>' + escapeHtml(d.projektName) + '</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }\n    h1 { color: #333; }\n  </style>\n</head>\n<body>\n  <h1>' + escapeHtml(d.projektName) + '</h1>\n  <p>Willkommen! Diese Seite wird bald unter <strong>' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</strong> erreichbar sein.</p>\n</body>\n</html>');
+      }
+
+      s2 += '<div class="hint-box beginner-only"><span class="hint-icon">+</span><p>Dieser HTML-Code ist nur ein Startpunkt. Du kannst das Design und den Inhalt jederzeit ändern — die Startrampe kümmert sich nur um das Deployment.</p></div>';
+
+      s2 += nextStepBtn(3);
+      document.getElementById('step2Content').innerHTML = s2;
+
+      /* ── Schritt 3: Git und GitHub ── */
+      var s3 = '';
+      s3 += '<p class="guide-text">Initialisiere Git in deinem Projekt und lade es auf GitHub hoch.</p>';
+
+      if (isWin) {
+        s3 += codeBlock('cd C:\\Users\\$env:USERNAME\\Projekte\\' + d.projektName + '\ngit init\ngit add .\ngit commit -m "Initial commit"');
+      } else {
+        s3 += codeBlock('cd ~/Projekte/' + d.projektName + '\ngit init\ngit add .\ngit commit -m "Initial commit"');
+      }
+
+      s3 += '<div class="hint-box beginner-only"><span class="hint-icon">+</span><p>Falls du noch nie mit Git gearbeitet hast: Git ist ein Versionskontrollsystem. Es merkt sich jeden Stand deines Projekts. GitHub ist die Online-Plattform, auf der dein Code gespeichert wird — und von dort holt Vercel ihn sich automatisch.</p></div>';
+
+      s3 += '<p class="guide-text">Jetzt auf GitHub das Repository anlegen:</p>';
+      s3 += '<div class="guide-text"><ol>';
+      s3 += '<li>Öffne <a href="https://github.com/new" target="_blank" rel="noopener">github.com/new</a></li>';
+      s3 += '<li>Repository-Name: <strong>' + escapeHtml(d.projektName) + '</strong></li>';
+      s3 += '<li>Sichtbarkeit: Public (oder Private)</li>';
+      s3 += '<li><strong>NICHTS ankreuzen</strong> — kein README, kein .gitignore, keine Lizenz</li>';
+      s3 += '<li>"Create repository" klicken</li>';
+      s3 += '</ol></div>';
+
+      s3 += '<div class="warn-box"><span class="warn-icon">!</span><p>Erstelle das GitHub-Repository <strong>ohne README</strong> und <strong>ohne .gitignore</strong>. Wenn GitHub automatisch Dateien anlegt, kollidiert das mit deinem lokalen Projekt.</p></div>';
+
+      s3 += '<p class="guide-text">Zurück im ' + shellLabel + ' — Repository verbinden und hochladen:</p>';
+      s3 += codeBlock('git remote add origin https://github.com/' + d.githubUser + '/' + d.projektName + '.git\ngit branch -M main\ngit push -u origin main');
+
+      s3 += '<p class="guide-text">Öffne <a href="https://github.com/' + encodeURIComponent(d.githubUser) + '/' + encodeURIComponent(d.projektName) + '" target="_blank" rel="noopener">github.com/' + escapeHtml(d.githubUser) + '/' + escapeHtml(d.projektName) + '</a> — deine <code>index.html</code> sollte dort sichtbar sein.</p>';
+
+      s3 += nextStepBtn(4);
+      document.getElementById('step3Content').innerHTML = s3;
+
+      /* ── Schritt 4: Vercel ── */
+      var s4 = '';
+      s4 += '<p class="guide-text">Vercel holt sich dein Projekt von GitHub und stellt es online.</p>';
+
+      s4 += '<div class="guide-text"><ol>';
+      s4 += '<li>Öffne <a href="https://vercel.com/new" target="_blank" rel="noopener">vercel.com/new</a></li>';
+      s4 += '<li>Klicke "Import Git Repository"</li>';
+      s4 += '<li>Autorisiere GitHub falls noch nicht geschehen</li>';
+      s4 += '<li>Wähle <strong>' + escapeHtml(d.githubUser) + '/' + escapeHtml(d.projektName) + '</strong></li>';
+      s4 += '<li>Framework Preset: <strong>Other</strong></li>';
+      s4 += '<li>Klicke <strong>"Deploy"</strong></li>';
+      s4 += '<li>Warte auf das grüne Häkchen</li>';
+      s4 += '</ol></div>';
+
+      s4 += '<div class="hint-box beginner-only"><span class="hint-icon">+</span><p>Vercel ist ein Hosting-Dienst, der dein Projekt automatisch aus GitHub holt und ins Internet stellt. Jedes Mal, wenn du neuen Code nach GitHub pushst, aktualisiert Vercel automatisch deine Seite.</p></div>';
+
+      s4 += '<p class="guide-text">Dein Projekt ist jetzt unter einer Vercel-Preview-URL erreichbar. Prüfe, ob deine Seite dort angezeigt wird.</p>';
+
+      s4 += nextStepBtn(5);
+      document.getElementById('step4Content').innerHTML = s4;
+
+      /* ── Schritt 5: Domain in Vercel und Cloudflare ── */
+      var s5 = '';
+      s5 += '<p class="guide-text">Jetzt verbinden wir deine Custom Domain mit dem Vercel-Projekt.</p>';
+
+      s5 += '<div class="section-heading"><span class="plus">+</span><h2>Vercel: Domain hinzufügen</h2></div>';
+      s5 += '<div class="guide-text"><ol>';
+      s5 += '<li>Im Vercel-Dashboard: Klicke auf dein Projekt <strong>' + escapeHtml(d.projektName) + '</strong></li>';
+      s5 += '<li>Gehe zu <strong>Settings → Domains</strong></li>';
+      s5 += '<li>Trage ein: <strong>' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</strong></li>';
+      s5 += '<li>Klicke <strong>"Add"</strong></li>';
+      s5 += '<li>Vercel zeigt <strong>"Invalid Configuration"</strong> — das ist korrekt, der DNS-Eintrag fehlt noch</li>';
+      s5 += '</ol></div>';
+
+      s5 += '<div class="section-heading"><span class="plus">+</span><h2>Cloudflare: DNS-Eintrag setzen</h2></div>';
+      s5 += '<div class="guide-text"><ol>';
+      s5 += '<li>Öffne das <a href="https://dash.cloudflare.com" target="_blank" rel="noopener">Cloudflare-Dashboard</a> für deine Domain <strong>' + escapeHtml(d.domain) + '</strong></li>';
+      s5 += '<li>Gehe zu <strong>DNS → Records → Add Record</strong></li>';
+      s5 += '<li>Trage folgende Werte ein:</li>';
+      s5 += '</ol></div>';
+
+      s5 += '<table class="dns-table">';
+      s5 += '<tr><th>Feld</th><th>Wert</th></tr>';
+      s5 += '<tr><td>Type</td><td><strong>CNAME</strong></td></tr>';
+      s5 += '<tr><td>Name</td><td><strong>' + escapeHtml(d.subdomain) + '</strong></td></tr>';
+      s5 += '<tr><td>Target</td><td><strong>cname.vercel-dns.com</strong></td></tr>';
+      s5 += '<tr><td>Proxy status</td><td><strong>DNS only</strong> (graue Wolke!)</td></tr>';
+      s5 += '<tr><td>TTL</td><td>Auto</td></tr>';
+      s5 += '</table>';
+
+      s5 += '<div class="warn-box"><span class="warn-icon">!</span><p>Setze den Proxy-Status auf <strong>"DNS only"</strong> (graue Wolke). Wenn die orangene Wolke aktiv ist, entsteht ein SSL-Konflikt mit Vercel. Vercel stellt eigene SSL-Zertifikate aus und braucht direkten Zugriff.</p></div>';
+
+      s5 += '<div class="hint-box beginner-only"><span class="hint-icon">+</span><p>Cloudflare ist ein DNS-Dienst. DNS ist wie ein Telefonbuch für das Internet — es sagt dem Browser, wo deine Seite liegt. Der CNAME-Eintrag sagt: "Wenn jemand ' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + ' aufruft, leite ihn zu Vercel weiter."</p></div>';
+
+      s5 += nextStepBtn(6);
+      document.getElementById('step5Content').innerHTML = s5;
+
+      /* ── Schritt 6: Live ── */
+      var s6 = '';
+      s6 += '<p class="guide-text">Fast geschafft — nur noch den SSL-Status prüfen.</p>';
+
+      s6 += '<div class="guide-text"><ol>';
+      s6 += '<li>Warte 1–5 Minuten (SSL-Zertifikat wird erstellt)</li>';
+      s6 += '<li>Prüfe im Vercel-Dashboard (<strong>Settings → Domains</strong>): Grünes Häkchen neben <strong>' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</strong>?</li>';
+      s6 += '<li>Öffne im Browser: <strong>https://' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</strong></li>';
+      s6 += '</ol></div>';
+
+      s6 += '<div class="result-card">';
+      s6 += '<div class="card-step-number" style="margin-bottom:1rem;">Dein Ergebnis</div>';
+      s6 += '<div class="result-item"><span class="result-label">Live-URL</span><a href="https://' + encodeURIComponent(d.subdomain) + '.' + encodeURIComponent(d.domain) + '" target="_blank" rel="noopener">https://' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</a></div>';
+      s6 += '<div class="result-item"><span class="result-label">Repository</span><a href="https://github.com/' + encodeURIComponent(d.githubUser) + '/' + encodeURIComponent(d.projektName) + '" target="_blank" rel="noopener">github.com/' + escapeHtml(d.githubUser) + '/' + escapeHtml(d.projektName) + '</a></div>';
+      s6 += '<div class="result-item"><span class="result-label">Vercel-Projekt</span><a href="https://vercel.com/' + encodeURIComponent(d.githubUser) + '/' + encodeURIComponent(d.projektName) + '" target="_blank" rel="noopener">vercel.com/' + escapeHtml(d.githubUser) + '/' + escapeHtml(d.projektName) + '</a></div>';
+      s6 += '</div>';
+
+      // Nächste Schritte
+      s6 += '<div class="section-heading"><span class="plus">+</span><h2>Nächste Schritte</h2></div>';
+      s6 += '<ul class="guide-text next-steps" style="margin-left:1.5rem;">';
+      s6 += '<li>Jeder <code>git push</code> auf den <code>main</code>-Branch aktualisiert die Seite automatisch</li>';
+      s6 += '<li>Design anpassen: Einfach <code>index.html</code> bearbeiten, committen, pushen</li>';
+      s6 += '<li>Weitere Seiten hinzufügen: Neue HTML-Dateien im Projektordner anlegen</li>';
+      s6 += '</ul>';
+
+      // Troubleshooting
+      s6 += '<div style="margin-top:2rem;">';
+      s6 += '<button class="troubleshoot-toggle" onclick="toggleTroubleshoot(this)"><span class="arrow">▶</span> Probleme? Troubleshooting</button>';
+      s6 += '<div class="troubleshoot-content">';
+      s6 += '<table class="troubleshoot-table">';
+      s6 += '<tr><th>Problem</th><th>Ursache</th><th>Lösung</th></tr>';
+      s6 += '<tr><td>"Invalid Configuration" bleibt in Vercel</td><td>DNS nicht propagiert</td><td>5 Min. warten, Cloudflare-Eintrag prüfen</td></tr>';
+      s6 += '<tr><td>ERR_TOO_MANY_REDIRECTS</td><td>Cloudflare Proxy aktiv (orangene Wolke)</td><td>Auf "DNS only" (graue Wolke) umstellen</td></tr>';
+      s6 += '<tr><td>404 Not Found (Vercel)</td><td>Kein Production-Deployment</td><td><code>git push origin main</code> oder "Redeploy"</td></tr>';
+      s6 += '<tr><td>Seite zeigt altes Design</td><td>Vercel-Cache</td><td>Im Dashboard "Redeploy" klicken</td></tr>';
+      s6 += '<tr><td>SSL-Zertifikat fehlt nach 10 Min.</td><td>Proxy aktiv oder DNS falsch</td><td>Proxy-Status und CNAME-Ziel prüfen</td></tr>';
+      s6 += '<tr><td>"Domain is already in use"</td><td>Domain bei anderem Vercel-Projekt</td><td>Dort erst entfernen</td></tr>';
+      s6 += '<tr><td>Git push schlägt fehl</td><td>Remote nicht korrekt</td><td><code>git remote -v</code> prüfen</td></tr>';
+      s6 += '<tr><td>GitHub-Repo ist nicht leer</td><td>README automatisch erstellt</td><td>Repo löschen, neu ohne Dateien erstellen</td></tr>';
+      s6 += '</table>';
+      s6 += '</div></div>';
+
+      document.getElementById('step6Content').innerHTML = s6;
+    }
+
+    /* ── Troubleshooting Toggle ── */
+    function toggleTroubleshoot(btn) {
+      btn.classList.toggle('open');
+      var content = btn.nextElementSibling;
+      content.classList.toggle('open');
+    }
+  </script>
+
 </body>
 </html>
