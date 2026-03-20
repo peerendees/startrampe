@@ -1,0 +1,12 @@
+{
+  "name": "berent-website",
+  "version": "1.0.0",
+  "description": "BERENT Website – Template",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/input.css -o ./public/output.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./public/output.css --minify && cp index.html public/ && cp -r images public/ 2>/dev/null || true"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}
