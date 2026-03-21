@@ -51,6 +51,7 @@
       --border: #2a2118;
       --copper: #B5742A;
       --copper-light: #c98a3f;
+      --copper-dark: #7a4e1c;
       --gold: #E8C98A;
       --text: #C4BCB1;
       --muted: #7A6A58;
@@ -84,8 +85,9 @@
       background: var(--card);
       border-bottom: 2px solid var(--copper);
       padding: 1rem 1.5rem;
-      position: relative;
-      z-index: 10;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
     .header-inner {
       max-width: var(--max-width);
@@ -209,79 +211,88 @@
       font-weight: 300;
     }
 
-    /* ── Step Progress Bar ── */
-    .progress-bar {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      margin: 2rem 0 3rem;
-      padding: 0;
-      list-style: none;
-      overflow-x: auto;
-    }
-    .progress-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      position: relative;
-      flex: 1;
-      max-width: 140px;
-    }
-    .progress-step::after {
-      content: '';
-      position: absolute;
-      top: 16px;
-      left: calc(50% + 18px);
-      width: calc(100% - 36px);
-      height: 2px;
-      background: var(--border);
-    }
-    .progress-step:last-child::after { display: none; }
-    .progress-step.active::after,
-    .progress-step.done::after {
-      background: var(--copper);
-    }
-    .step-dot {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
+    /* ── Step Bar (Textschmiede-Stil) ── */
+    .step-bar-wrapper {
       background: var(--card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 52px;
+      z-index: 99;
+      padding: 0.75rem 1rem;
+    }
+    .step-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      overflow-x: auto;
+      list-style: none;
+    }
+    .step-item {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--muted);
-      position: relative;
-      z-index: 1;
-      transition: all 0.3s ease;
+      gap: 0;
     }
-    .progress-step.active .step-dot {
-      border-color: var(--copper);
-      background: var(--copper);
-      color: var(--bg);
-    }
-    .progress-step.done .step-dot {
-      border-color: var(--copper);
-      background: transparent;
-      color: var(--copper);
-    }
-    .step-label {
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
       font-family: var(--font-mono);
       font-size: 0.65rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--muted);
       white-space: nowrap;
+      transition: all 0.3s;
     }
-    .progress-step.active .step-label {
+    .step-indicator .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--border);
+      color: var(--muted);
+      font-size: 0.6rem;
+      font-weight: 500;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .step-indicator.active {
+      border-color: var(--copper);
+      background: rgba(181, 116, 42, 0.1);
       color: var(--copper);
     }
-    .progress-step.done .step-label {
+    .step-indicator.active .step-num {
+      background: var(--copper);
+      color: var(--bg);
+    }
+    .step-indicator.done {
+      border-color: var(--copper-dark);
+      background: rgba(181, 116, 42, 0.05);
       color: var(--copper);
       opacity: 0.7;
+    }
+    .step-indicator.done .step-num {
+      background: var(--copper-dark);
+      color: var(--bg);
+    }
+    .step-connector {
+      width: 20px;
+      height: 1px;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .step-connector.done {
+      background: var(--copper-dark);
     }
 
     /* ── Cards ── */
@@ -767,8 +778,9 @@
       .hero-title { font-size: 2.2rem; }
       .hero-tagline { font-size: 1rem; }
       .form-row { grid-template-columns: 1fr; }
-      .step-label { display: none; }
-      .progress-step { max-width: 48px; }
+      .step-indicator span:not(.step-num) { display: none; }
+      .step-indicator { padding: 0.4rem; }
+      .step-connector { width: 10px; }
       .card { padding: 1.25rem; }
       .card-title { font-size: 1.5rem; }
       .footer-inner { flex-direction: column; text-align: center; }
@@ -806,13 +818,42 @@
     </div>
   </header>
 
-  <main class="main-content">
+  <!-- ── Hero ── -->
+  <section class="hero" style="max-width:var(--max-width);margin:0 auto;padding:3rem 1.5rem 2rem;">
+    <h1 class="hero-title">Startrampe</h1>
+    <p class="hero-tagline">Dein Projekt. Von lokal bis live.</p>
+  </section>
 
-    <!-- ── Hero ── -->
-    <section class="hero">
-      <h1 class="hero-title">Startrampe</h1>
-      <p class="hero-tagline">Dein Projekt. Von lokal bis live.</p>
-    </section>
+  <!-- ── Step Bar (sticky unter Header) ── -->
+  <div class="step-bar-wrapper">
+    <nav class="step-bar" id="progressBar">
+      <div class="step-item" data-step="1">
+        <div class="step-indicator active"><span class="step-num">1</span> Eingabe</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="2">
+        <div class="step-indicator"><span class="step-num">2</span> Projekt</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="3">
+        <div class="step-indicator"><span class="step-num">3</span> GitHub</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="4">
+        <div class="step-indicator"><span class="step-num">4</span> Vercel</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="5">
+        <div class="step-indicator"><span class="step-num">5</span> DNS</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="6">
+        <div class="step-indicator"><span class="step-num">6</span> Live</div>
+      </div>
+    </nav>
+  </div>
+
+  <main class="main-content" style="padding-top:1.5rem;">
 
     <!-- ── Erfahrungslevel ── -->
     <div style="display:flex;justify-content:center;margin-bottom:1.5rem;">
@@ -821,36 +862,6 @@
         <button type="button" class="toggle-option" data-level="fortgeschritten">Fortgeschrittener</button>
       </div>
     </div>
-
-    <!-- ── Step Progress Bar ── -->
-    <nav>
-      <ol class="progress-bar" id="progressBar">
-        <li class="progress-step active" data-step="1">
-          <span class="step-dot">1</span>
-          <span class="step-label">Eingabe</span>
-        </li>
-        <li class="progress-step" data-step="2">
-          <span class="step-dot">2</span>
-          <span class="step-label">Projekt</span>
-        </li>
-        <li class="progress-step" data-step="3">
-          <span class="step-dot">3</span>
-          <span class="step-label">GitHub</span>
-        </li>
-        <li class="progress-step" data-step="4">
-          <span class="step-dot">4</span>
-          <span class="step-label">Vercel</span>
-        </li>
-        <li class="progress-step" data-step="5">
-          <span class="step-dot">5</span>
-          <span class="step-label">DNS</span>
-        </li>
-        <li class="progress-step" data-step="6">
-          <span class="step-dot">6</span>
-          <span class="step-label">Live</span>
-        </li>
-      </ol>
-    </nav>
 
     <!-- ══════════════════════════════════════ -->
     <!-- ── Schritt 1: Eingabeformular ──────── -->
@@ -1219,23 +1230,31 @@
     function goToStep(step) {
       currentStep = step;
 
-      // Progress Bar aktualisieren
-      var steps = document.querySelectorAll('.progress-step');
-      steps.forEach(function(s) {
-        var n = parseInt(s.getAttribute('data-step'));
-        s.classList.remove('active', 'done');
-        if (n === currentStep) s.classList.add('active');
-        else if (n < currentStep) s.classList.add('done');
+      // Step-Bar aktualisieren
+      var items = document.querySelectorAll('.step-item');
+      items.forEach(function(item) {
+        var n = parseInt(item.getAttribute('data-step'));
+        var indicator = item.querySelector('.step-indicator');
+        var num = item.querySelector('.step-num');
+        indicator.classList.remove('active', 'done');
+        if (n === currentStep) {
+          indicator.classList.add('active');
+          num.textContent = n;
+        } else if (n < currentStep) {
+          indicator.classList.add('done');
+          num.textContent = '✓';
+        } else {
+          num.textContent = n;
+        }
       });
 
-      // Done-Häkchen
-      steps.forEach(function(s) {
-        var n = parseInt(s.getAttribute('data-step'));
-        var dot = s.querySelector('.step-dot');
-        if (n < currentStep) {
-          dot.textContent = '✓';
+      // Konnektoren aktualisieren
+      var connectors = document.querySelectorAll('.step-connector');
+      connectors.forEach(function(c, i) {
+        if (i < currentStep - 1) {
+          c.classList.add('done');
         } else {
-          dot.textContent = n;
+          c.classList.remove('done');
         }
       });
 
