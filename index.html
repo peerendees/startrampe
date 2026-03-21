@@ -165,6 +165,20 @@
       --code-bg: #F0EBE3;
       --text: #3A3228;
       --muted: #7A6A58;
+      --warning: #A03030;
+      --success: #2d7a3a;
+    }
+    html[data-theme="light"] .hero-title {
+      color: var(--copper);
+    }
+    html[data-theme="light"] .site-header {
+      background: #FFFFFF;
+    }
+    html[data-theme="light"] .card-title {
+      color: var(--copper);
+    }
+    html[data-theme="light"] .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A6A58' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
     }
 
     /* ── Main ── */
@@ -871,7 +885,7 @@
               <label class="form-label" for="ide">Entwicklungsumgebung <span class="required">*</span></label>
               <select class="form-select" id="ide">
                 <option value="">Bitte wählen</option>
-                <option value="claude-code">Claude Code</option>
+                <option value="claude-code" selected>Claude Code</option>
                 <option value="cursor">Cursor</option>
                 <option value="vscode">VS Code</option>
                 <option value="terminal">Terminal</option>
@@ -895,7 +909,21 @@
             <div class="form-hint">Wird als Repo-Name, Vercel-Projektname und Ordnername verwendet.</div>
           </div>
 
-          <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="domain">Deine Domain <span class="required">*</span></label>
+            <input type="text" class="form-input" id="domain" placeholder="z. B. deine-domain.de" spellcheck="false">
+            <div class="form-hint">Die Domain, unter der dein Projekt erreichbar sein soll.</div>
+            <div class="error-msg" id="errDomain">Bitte gib deine Domain ein.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+              <input type="checkbox" id="subdomainToggle" checked style="accent-color:var(--copper);width:1rem;height:1rem;">
+              Subdomain anlegen
+            </label>
+          </div>
+
+          <div id="subdomainFields">
             <div class="form-group derived-group">
               <label class="form-label" for="subdomain">
                 Subdomain
@@ -903,11 +931,6 @@
               </label>
               <input type="text" class="form-input" id="subdomain" placeholder="wird automatisch abgeleitet" spellcheck="false">
               <div class="subdomain-preview" id="subdomainPreview"></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="domain">Hauptdomain</label>
-              <input type="text" class="form-input" id="domain" value="berent.ai" spellcheck="false">
-              <div class="form-hint">Wenn du keine eigene Domain hast, nutze berent.ai als Subdomain.</div>
             </div>
           </div>
 
@@ -1097,6 +1120,13 @@
       subdomainPreview.textContent = sub && dom ? sub + '.' + dom : '';
     }
 
+    /* ── Subdomain-Checkbox ── */
+    var subdomainToggle = document.getElementById('subdomainToggle');
+    var subdomainFields = document.getElementById('subdomainFields');
+    subdomainToggle.addEventListener('change', function() {
+      subdomainFields.style.display = this.checked ? 'block' : 'none';
+    });
+
     /* ── Erfahrungslevel Toggle ── */
     var toggleBtns = document.querySelectorAll('.toggle-option');
     toggleBtns.forEach(function(btn) {
@@ -1152,6 +1182,16 @@
         document.getElementById('errIde').classList.remove('visible');
       }
 
+      var dom = domainEl.value.trim();
+      if (!dom) {
+        domainEl.classList.add('error');
+        document.getElementById('errDomain').classList.add('visible');
+        valid = false;
+      } else {
+        domainEl.classList.remove('error');
+        document.getElementById('errDomain').classList.remove('visible');
+      }
+
       return valid;
     }
 
@@ -1160,14 +1200,16 @@
       e.preventDefault();
       if (!validateForm()) return;
 
+      var useSubdomain = document.getElementById('subdomainToggle').checked;
       formData = {
         beschreibung: beschreibungEl.value.trim(),
         githubUser: document.getElementById('githubUser').value.trim(),
         os: document.getElementById('os').value,
         ide: document.getElementById('ide').value,
         projektName: projektNameEl.value.trim() || deriveProjectName(beschreibungEl.value),
-        subdomain: subdomainEl.value.trim() || projektNameEl.value.trim(),
-        domain: domainEl.value.trim() || 'berent.ai'
+        subdomain: useSubdomain ? (subdomainEl.value.trim() || projektNameEl.value.trim()) : '',
+        domain: domainEl.value.trim(),
+        useSubdomain: useSubdomain
       };
 
       generateGuide();
@@ -1374,7 +1416,7 @@
 
       s4 += '<p class="guide-text">Dein Projekt ist jetzt unter einer Vercel-Preview-URL erreichbar. Prüfe, ob deine Seite dort angezeigt wird.</p>';
 
-      s4 += nextStepBtn(5);
+      s4 += nextStepBtn(d.useSubdomain ? 5 : 6);
       document.getElementById('step4Content').innerHTML = s4;
 
       /* ── Schritt 5: Domain in Vercel und Cloudflare ── */
@@ -1410,22 +1452,36 @@
 
       s5 += '<div class="hint-box beginner-only"><span class="hint-icon">+</span><p>Cloudflare ist ein DNS-Dienst. DNS ist wie ein Telefonbuch für das Internet — es sagt dem Browser, wo deine Seite liegt. Der CNAME-Eintrag sagt: "Wenn jemand ' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + ' aufruft, leite ihn zu Vercel weiter."</p></div>';
 
-      s5 += nextStepBtn(6);
+      if (d.useSubdomain) {
+        s5 += nextStepBtn(6);
+      } else {
+        s5 += '<p class="guide-text" style="color:var(--muted);font-style:italic;">Dieser Schritt entfällt, da keine Subdomain angelegt wird.</p>';
+      }
       document.getElementById('step5Content').innerHTML = s5;
+
+      // Schritt 5 ausblenden wenn keine Subdomain
+      document.getElementById('step5').style.display = d.useSubdomain ? '' : 'none';
 
       /* ── Schritt 6: Live ── */
       var s6 = '';
-      s6 += '<p class="guide-text">Fast geschafft — nur noch den SSL-Status prüfen.</p>';
+      var liveUrl = d.useSubdomain
+        ? 'https://' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain)
+        : 'https://' + escapeHtml(d.projektName) + '.vercel.app';
 
-      s6 += '<div class="guide-text"><ol>';
-      s6 += '<li>Warte 1–5 Minuten (SSL-Zertifikat wird erstellt)</li>';
-      s6 += '<li>Prüfe im Vercel-Dashboard (<strong>Settings → Domains</strong>): Grünes Häkchen neben <strong>' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</strong>?</li>';
-      s6 += '<li>Öffne im Browser: <strong>https://' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</strong></li>';
-      s6 += '</ol></div>';
+      if (d.useSubdomain) {
+        s6 += '<p class="guide-text">Fast geschafft — nur noch den SSL-Status prüfen.</p>';
+        s6 += '<div class="guide-text"><ol>';
+        s6 += '<li>Warte ein bis fünf Minuten (SSL-Zertifikat wird erstellt)</li>';
+        s6 += '<li>Prüfe im Vercel-Dashboard (<strong>Settings → Domains</strong>): Grünes Häkchen neben <strong>' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</strong>?</li>';
+        s6 += '<li>Öffne im Browser: <strong>' + liveUrl + '</strong></li>';
+        s6 += '</ol></div>';
+      } else {
+        s6 += '<p class="guide-text">Dein Projekt ist jetzt unter der Vercel-URL erreichbar. Du kannst die Subdomain jederzeit später einrichten.</p>';
+      }
 
       s6 += '<div class="result-card">';
       s6 += '<div class="card-step-number" style="margin-bottom:1rem;">Dein Ergebnis</div>';
-      s6 += '<div class="result-item"><span class="result-label">Live-URL</span><a href="https://' + encodeURIComponent(d.subdomain) + '.' + encodeURIComponent(d.domain) + '" target="_blank" rel="noopener">https://' + escapeHtml(d.subdomain) + '.' + escapeHtml(d.domain) + '</a></div>';
+      s6 += '<div class="result-item"><span class="result-label">Live-URL</span><a href="' + liveUrl + '" target="_blank" rel="noopener">' + liveUrl + '</a></div>';
       s6 += '<div class="result-item"><span class="result-label">Repository</span><a href="https://github.com/' + encodeURIComponent(d.githubUser) + '/' + encodeURIComponent(d.projektName) + '" target="_blank" rel="noopener">github.com/' + escapeHtml(d.githubUser) + '/' + escapeHtml(d.projektName) + '</a></div>';
       s6 += '<div class="result-item"><span class="result-label">Vercel-Projekt</span><a href="https://vercel.com/' + encodeURIComponent(d.githubUser) + '/' + encodeURIComponent(d.projektName) + '" target="_blank" rel="noopener">vercel.com/' + escapeHtml(d.githubUser) + '/' + escapeHtml(d.projektName) + '</a></div>';
       s6 += '</div>';
