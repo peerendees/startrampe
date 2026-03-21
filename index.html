@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,38 +81,91 @@
 
     /* ── Header ── */
     .site-header {
-      border-bottom: 1px solid var(--border);
+      background: var(--card);
+      border-bottom: 2px solid var(--copper);
       padding: 1rem 1.5rem;
+      position: relative;
+      z-index: 10;
     }
     .header-inner {
       max-width: var(--max-width);
       margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-    }
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-    }
-    .header-logo {
-      height: 32px;
-      width: auto;
+      gap: 1rem;
     }
     .header-plus {
       color: var(--gold);
       font-family: var(--font-headline);
-      font-size: 1.5rem;
+      font-size: 2rem;
       line-height: 1;
     }
-    .header-label {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--muted);
+    .header-title {
+      font-family: var(--font-headline);
+      font-size: 1.6rem;
+      color: var(--text);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+    .header-title sup {
+      font-family: var(--font-mono);
+      font-size: 0.5rem;
+      color: var(--copper);
+      vertical-align: super;
+      margin-left: 0.3rem;
+      letter-spacing: 0.08em;
+    }
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .theme-toggle {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .theme-toggle:hover {
+      border-color: var(--copper);
+      color: var(--copper);
+    }
+    .theme-toggle .theme-icon {
+      transition: transform 0.3s;
+    }
+    html[data-theme="light"] .theme-toggle .theme-icon {
+      transform: rotate(180deg);
+    }
+    .header-back {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .header-back:hover { color: var(--copper); }
+
+    /* ── Light Theme ── */
+    html[data-theme="light"] {
+      --bg: #FAF7F2;
+      --card: #FFFFFF;
+      --card-hover: #F5F0E8;
+      --border: #E0D6C8;
+      --code-bg: #F0EBE3;
+      --text: #3A3228;
+      --muted: #7A6A58;
     }
 
     /* ── Main ── */
@@ -728,11 +781,14 @@
   <!-- ── Header ── -->
   <header class="site-header">
     <div class="header-inner">
-      <a href="https://berent.ai" class="header-brand">
-        <img src="assets/images/logo_farbe_v3.webp" alt="BERENT.AI" class="header-logo">
-        <span class="header-plus">+</span>
-      </a>
-      <span class="header-label">Guides</span>
+      <span class="header-plus">+</span>
+      <h1 class="header-title">Startrampe<sup>5TC</sup></h1>
+      <div class="header-right">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Hell/Dunkel umschalten">
+          <span class="theme-icon">☀️</span>
+        </button>
+        <a href="https://berent.ai" class="header-back">← berent.ai</a>
+      </div>
     </div>
   </header>
 
@@ -934,11 +990,11 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <img src="assets/images/logo_farbe_v3.webp" alt="BERENT.AI" class="footer-logo">
-        <span class="header-plus" style="font-size:1rem;">+</span>
+        <span style="color:var(--gold);font-family:var(--font-headline);font-size:1rem;">+</span>
       </div>
       <div class="footer-links">
         <a href="https://berent.ai/impressum.html">Impressum</a>
-        <a href="https://berent.ai">berent.ai</a>
+        <a href="https://berent.ai">← Zurück zur Hauptseite</a>
       </div>
     </div>
   </footer>
@@ -948,6 +1004,24 @@
   <!-- ══════════════════════════════════════ -->
   <script>
     /* ── State ── */
+    /* ── Theme Toggle ── */
+    function toggleTheme() {
+      var html = document.documentElement;
+      var current = html.getAttribute('data-theme') || 'dark';
+      var next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      document.querySelector('.theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+    (function() {
+      var saved = localStorage.getItem('theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        var icon = document.querySelector('.theme-icon');
+        if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+      }
+    })();
+
     var currentStep = 1;
     var formData = {};
     var manualOverride = { projektName: false, subdomain: false };
